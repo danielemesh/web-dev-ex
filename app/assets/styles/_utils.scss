@@ -16,11 +16,45 @@
     content: '▾';
   }
   
-  &.up {
+  &.triangle-up {
     transform: rotate(180deg);
+  }
+  
+  &.triangle-right {
+    transform: rotate(-90deg);
   }
 }
 
 .bordered {
   border: 1px solid $blue-azure;
 }
+
+.btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow:none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  
+  &.btn-link {
+    font-size: 0.8em;
+  }
+  
+  &.btn-primary {
+    padding: 7px;
+    border-radius: 3px;
+    color: #fff;
+    background-color: $blue-dark;
+    
+    .triangle {
+      font-size: 1.2em;
+    }
+  }
+  
+  &.submit-btn {
+    font-size: 1em;
+    color: #fff;
+  }
+}
+

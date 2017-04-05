@@ -31,6 +31,11 @@
 		padding: 10px 0;
 		border-bottom: 1px solid $gray-medium;
 		
+		&.cta-buttons {
+			padding-bottom: 0;
+			border: none;
+		}
+		
 		&.empty {
 			.step {
 				color: $gray-light;
@@ -60,6 +65,15 @@
 	
 	.summary-list {
 		padding-top: 20px;
+	}
+	
+	.cta-btn {
+		display: inline-block;
+		vertical-align: top;
+	}
+	
+	.cta-btn + .cta-btn {
+		margin-left: 15px;
 	}
 }
 

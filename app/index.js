@@ -3,8 +3,6 @@ require("./assets/styles/style.scss");
 import { createStore, applyMiddleware } from "redux";
 import createLogger from "redux-logger";
 
-import $ from "jquery";
-
 import { app } from "./reducers/root_reducer";
 import { DATA } from "./data/ex_data";
 
