@@ -1,11 +1,9 @@
 import expect from "expect";
 import deepFreeze from "deep-freeze-strict";
 
-import { combineReducers } from 'redux';
+import { TOGGLE_DEVICE, toggleDevice } from "../actions";
 
-import { SELECT_TIME, selectTime, TOGGLE_DEVICE, toggleDevice } from "./actions";
-
-const deviceReducer = (state = {}, action) => {
+const device = (state = {}, action) => {
     switch (action.type) {
         case TOGGLE_DEVICE:
             if (state.id !== action.deviceId) {
@@ -19,42 +17,33 @@ const deviceReducer = (state = {}, action) => {
     }
 };
 
-const devicesReducer = (state = [], action) => {
+const devices = (state = [], action) => {
     switch (action.type) {
         case TOGGLE_DEVICE:
-            return state.map(d => deviceReducer(d, action));
+            return state.map(d => device(d, action));
         default:
             return state;
     }
 };
 
-const groupReducer = (state = {}, action) => {
+const group = (state = {}, action) => {
     switch (action.type) {
         case TOGGLE_DEVICE:
             if (state.id !== action.groupId) {
                 return state;
             }
             return Object.assign({}, state, {
-                devices: devicesReducer(state.devices, action)
+                devices: devices(state.devices, action)
             });
         default:
             return state;
     }
 };
 
-const groups = (state = [], action) => {
+export const groups = (state = [], action) => {
     switch (action.type) {
         case TOGGLE_DEVICE:
-            return state.map(g => groupReducer(g, action));
-        default:
-            return state;
-    }
-};
-
-const times = (state = 1, action) => {
-    switch (action.type) {
-        case SELECT_TIME:
-            return action.id;
+            return state.map(g => group(g, action));
         default:
             return state;
     }
@@ -62,17 +51,17 @@ const times = (state = 1, action) => {
 
 const testToggleDevice = () => {
     const stateBefore = [{
-        "id":      "1",
-        "name":    "group 1",
+        "id"     : "1",
+        "name"   : "group 1",
         "devices": [
             {
-                "id":     11,
-                "name":   "device 11",
+                "id"    : 11,
+                "name"  : "device 11",
                 "active": 1
             },
             {
-                "id":     12,
-                "name":   "device 12",
+                "id"    : 12,
+                "name"  : "device 12",
                 "active": 0
             }
         ]
@@ -80,17 +69,17 @@ const testToggleDevice = () => {
     }];
     const action      = toggleDevice("1", 11);
     const stateAfter  = [{
-        "id":      "1",
-        "name":    "group 1",
+        "id"     : "1",
+        "name"   : "group 1",
         "devices": [
             {
-                "id":     11,
-                "name":   "device 11",
+                "id"    : 11,
+                "name"  : "device 11",
                 "active": 0
             },
             {
-                "id":     12,
-                "name":   "device 12",
+                "id"    : 12,
+                "name"  : "device 12",
                 "active": 0
             }
         ]
@@ -103,24 +92,5 @@ const testToggleDevice = () => {
     expect(groups(stateBefore, action)).toEqual(stateAfter);
 };
 
-const testSelectTime = () => {
-    const stateBefore = {};
-    const action      = selectTime(2);
-    const stateAfter  = 2;
-    
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-    
-    expect(times(stateBefore, action)).toEqual(stateAfter);
-};
-
-export const app = combineReducers({
-    groups,
-    times
-});
-
 testToggleDevice();
-testSelectTime();
-
-
-console.debug("All tests passed!");
+console.debug("Device groups tests passed!");
