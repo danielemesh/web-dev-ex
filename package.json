@@ -1,0 +1,40 @@
+{
+  "name": "web-dev-ex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack & webpack-dev-server --hot --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielemesh/web-dev-ex.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielemesh/web-dev-ex/issues"
+  },
+  "homepage": "https://github.com/danielemesh/web-dev-ex#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "html-webpack-include-assets-plugin": "0.0.4",
+    "html-webpack-plugin": "^2.28.0",
+    "jquery": "^3.1.1",
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.16.1",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  },
+  "dependencies": {
+    "deep-freeze-strict": "^1.1.1",
+    "expect": "^1.20.2",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.8.2"
+  }
+}
