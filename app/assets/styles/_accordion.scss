@@ -1,0 +1,12 @@
+.accordion {
+	.accordion-item-header {
+		padding: 10px 20px;
+		background-color: $blue-dark;
+		color: #fff;
+	}
+	
+	.accordion-item-content {
+		margin-top: 1px;
+		padding: 10px 20px;
+	}
+}

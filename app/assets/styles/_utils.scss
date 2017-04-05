@@ -1,0 +1,26 @@
+.clearfix {
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+.triangle {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  cursor: pointer;
+  
+  &:before {
+    content: '▾';
+  }
+  
+  &.up {
+    transform: rotate(180deg);
+  }
+}
+
+.bordered {
+  border: 1px solid $blue-azure;
+}
