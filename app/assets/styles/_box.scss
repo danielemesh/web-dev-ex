@@ -1,12 +1,71 @@
 .box {
 	padding: 20px;
-	line-height: 1.5;
 	
 	.box-title {
+		line-height: 1.5;
 		color: $blue-medium;
 	}
 	
 	.step {
+		font-size: 1.3em;
 		font-weight: bold;
+	}
+	
+	&.protocols-box,
+	&.times-box {
+		.selectors-list {
+			padding-top: 10px;
+			background-color: $blue-azure;
+		}
+	}
+	
+	/* Summary Box
+	============================= */
+	&.summary-box {
+		.box-content {
+			padding: 20px;
+		}
+	}
+	
+	.summary-section {
+		padding: 10px 0;
+		border-bottom: 1px solid $gray-medium;
+		
+		&.empty {
+			.step {
+				color: $gray-light;
+			}
+			
+			.placeholder {
+				opacity: 1;
+			}
+		}
+		
+		.placeholder {
+			opacity: 0;
+			padding-left: 10px;
+			color: $gray-light;
+		}
+	}
+	
+	.summary-section-header {
+		.placeholder {
+			font-style: italic;
+		}
+	}
+	
+	.summary-section-content {
+		padding-left: 10px;
+	}
+	
+	.summary-list {
+		padding-top: 20px;
+	}
+}
+
+@include desktop {
+	.box {
+		float: left;
+		width: 25%;
 	}
 }
