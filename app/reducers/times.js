@@ -34,6 +34,8 @@ export const times = (state = [], action) => {
     }
 };
 
+/* Tests
+============================= */
 const testSelectTime = () => {
     const stateBefore = [{
         "id"  : 1,
@@ -77,7 +79,6 @@ const testSelectTime = () => {
     
     expect(times(stateBefore, action)).toEqual(stateAfter);
 };
-
 const testClearAll = () => {
     const stateBefore = [{
         "id"  : 1,

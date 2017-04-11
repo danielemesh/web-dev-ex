@@ -72,6 +72,8 @@ renderAll();
 
 let form = $(".form");
 
+/* Helper Functions
+ ============================= */
 const getParentGroupId = (element) => {
     return element.parents(".accordion-item").data("group-id").toString();
 };
@@ -99,6 +101,7 @@ form.on("click", "#clearBtn", e => {
 
 form.on("change", ".accordion-item-content input", e => {
     e.preventDefault();
+    
     const element       = $(e.target);
     const deviceId      = element.data("item-id");
     const parentGroupId = getParentGroupId(element);

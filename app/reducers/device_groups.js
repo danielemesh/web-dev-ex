@@ -76,6 +76,8 @@ export const groups = (state = [], action) => {
     }
 };
 
+/* Tests
+============================= */
 const testToggleDevice = () => {
     const stateBefore = [{
         "id"     : "1",

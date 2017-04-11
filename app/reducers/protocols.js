@@ -32,6 +32,8 @@ export const protocols = (state = [], action) => {
     }
 };
 
+/* Tests
+============================= */
 const testToggleProtocol = () => {
     const stateBefore = [{
         "id"  : 1,
@@ -74,7 +76,6 @@ const testToggleProtocol = () => {
     
     expect(protocols(stateBefore, action)).toEqual(stateAfter);
 };
-
 const testClearAll = () => {
     const stateBefore = [{
         "id"  : 1,
