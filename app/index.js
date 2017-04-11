@@ -1,7 +1,7 @@
 require("./assets/styles/style.scss");
 
 import { createStore, applyMiddleware } from "redux";
-import { clearAll, selectTime, toggleDevice, toggleGroup, toggleProtocol } from "./actions";
+import { clearAll, selectTime, toggleDevice, toggleGroup, toggleProtocol } from "./actions/actions";
 import createLogger from "redux-logger";
 
 import $ from "jquery";

@@ -1,7 +1,7 @@
 import expect from "expect";
 import deepFreeze from "deep-freeze-strict";
 
-import { TOGGLE_DEVICE, toggleDevice, clearAll, CLEAR_ALL, toggleGroup, TOGGLE_GROUP } from "../actions";
+import { TOGGLE_DEVICE, toggleDevice, clearAll, CLEAR_ALL, toggleGroup, TOGGLE_GROUP } from "../actions/actions";
 
 const device = (state = {}, action) => {
     switch (action.type) {

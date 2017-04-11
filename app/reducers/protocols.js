@@ -1,7 +1,7 @@
 import expect from 'expect';
 import deepFreeze from 'deep-freeze-strict';
 
-import { TOGGLE_PROTOCOL, CLEAR_ALL, toggleProtocol, clearAll } from "../actions";
+import { TOGGLE_PROTOCOL, CLEAR_ALL, toggleProtocol, clearAll } from "../actions/actions";
 
 
 const protocol = (state = {}, action) => {

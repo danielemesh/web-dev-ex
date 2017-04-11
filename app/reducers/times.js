@@ -1,7 +1,7 @@
 import expect from 'expect';
 import deepFreeze from 'deep-freeze-strict';
 
-import { SELECT_TIME, CLEAR_ALL, selectTime, clearAll } from "../actions";
+import { SELECT_TIME, CLEAR_ALL, selectTime, clearAll } from "../actions/actions";
 
 
 export const time = (state = {}, action) => {
