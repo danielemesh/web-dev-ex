@@ -3,8 +3,6 @@ import $ from "jquery";
 import { renderSelectorsList } from './shared';
 
 export const renderDevicesGroupsBox = (groups) => {
-    //let groups = store.getState().groups;
-    
     let box = $(".group-devices-box .box-content");
     
     const accordionItems = groups.map(group => renderAccordionItems(group));

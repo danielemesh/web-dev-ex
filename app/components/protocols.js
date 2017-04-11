@@ -21,20 +21,18 @@ export const renderProtocolsSummary = (protocols) => {
                         <span class="placeholder">-Select Protocols-</span>
                     </h4>
                     <div class="summary-section-content">
-                        ${renderProtocolsSummaryList(protocols)}
+                        ${!emptyClass ? renderProtocolsSummaryList(protocols) : ""}
                     </div>
                 </div>`
 };
 
 const renderProtocolsSummaryList = (protocols) => {
-    if (protocols.length) {
-        let listHtml = `<ul class="summary-list">`;
-        
-        const items = protocols.map(protocol => {
-            return `<li class="summary-list-item">${protocol.name}</li>`;
-        });
-        
-        return listHtml.concat(items.join("")).concat("</ul>");
-    }
-    return "";
+    let listHtml = `<ul class="summary-list">`;
+    
+    const items = protocols.map(protocol => {
+        return `<li class="summary-list-item">${protocol.name}</li>`;
+    });
+    
+    return listHtml.concat(items.join("")).concat("</ul>");
+    
 };
