@@ -1,4 +1,5 @@
 export const TOGGLE_DEVICE   = "TOGGLE_DEVICE";
+export const TOGGLE_GROUP    = "TOGGLE_GROUP";
 export const TOGGLE_PROTOCOL = "TOGGLE_PROTOCOL";
 export const SELECT_TIME     = "SELECT_TIME";
 export const CLEAR_ALL       = "CLEAR_ALL";
@@ -10,6 +11,14 @@ export const toggleDevice = (groupId, deviceId) => {
         type: TOGGLE_DEVICE,
         groupId,
         deviceId
+    };
+};
+
+export const toggleGroup = (groupId, active) => {
+    return {
+        type: TOGGLE_GROUP,
+        groupId,
+        active
     };
 };
 

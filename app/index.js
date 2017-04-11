@@ -1,7 +1,7 @@
 require("./assets/styles/style.scss");
 
 import { createStore, applyMiddleware } from "redux";
-import { clearAll, toggleDevice } from "./actions";
+import { clearAll, toggleDevice, toggleGroup } from "./actions";
 import createLogger from "redux-logger";
 
 import $ from "jquery";
@@ -18,6 +18,12 @@ const normalizeData = (data) => {
                 inputType: "checkbox",
                 inputName: device.name.replace(" ", "_")
             });
+        });
+    });
+    
+    groups = groups.map(group => {
+        return Object.assign({}, group, {
+            active: group.devices.every(d => d.active) ? 1 : 0
         });
     });
     
@@ -42,6 +48,10 @@ const normalizeData = (data) => {
     return { groups, protocols, times };
 };
 
+const normalizeGroups = (groups) => {
+
+};
+
 const initialState = normalizeData(DATA);
 const logger       = createLogger();
 const store        = createStore(app, initialState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(logger));
@@ -63,11 +73,15 @@ const renderDevicesGroupsBox = () => {
 };
 
 const renderAccordionItems = (group) => {
+    let input = `<input type="checkbox" class="group-input"`;
+    
+    input += group.active ? " checked>" : ">";
+    
     return `<div class="accordion-item" data-group-id="${group.id}">
                 <div class="accordion-item-header">
                     <i class="triangle"></i>
                     <label class="label">
-                        <input type="checkbox">
+                        ${input}
                         ${group.name}
                     </label>
                 </div>
@@ -238,17 +252,28 @@ renderAll();
 
 //unsubscribe();
 
-$(".form").on("click", "#clearBtn", event => {
+let form = $(".form");
+
+/* Event Handlers
+ ============================= */
+form.on("click", "#clearBtn", event => {
     event.preventDefault();
     
     store.dispatch(clearAll());
 });
 
-$(".form").on("change", ".accordion-item-content input", e => {
-    //e.preventDefault();
+form.on("change", ".accordion-item-content input", e => {
+    e.preventDefault();
     const element       = $(e.target);
     const deviceId      = element.data("item-id");
     const parentGroupId = element.parents(".accordion-item").data("group-id").toString();
     
     store.dispatch(toggleDevice(parentGroupId, deviceId));
+});
+
+form.on("change", ".group-input", e => {
+    const element       = $(e.target);
+    const parentGroupId = element.parents(".accordion-item").data("group-id").toString();
+    const active = element.is(":checked") ? 1 : 0;
+    store.dispatch(toggleGroup(parentGroupId, active))
 });
