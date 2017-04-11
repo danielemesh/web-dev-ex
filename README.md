@@ -1,8 +1,7 @@
-#WEB Developer Exercise
+# WEB Developer Exercise
+[live demo](https://danielemesh.github.io/web-dev-ex/)
 
-##Install
+## Install
 ```
 npm install && npm start
 ```
-
-(live demo)[https://danielemesh.github.io/web-dev-ex/]
