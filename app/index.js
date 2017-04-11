@@ -1,7 +1,7 @@
 require("./assets/styles/style.scss");
 
 import { createStore, applyMiddleware } from "redux";
-import { clearAll, toggleDevice, toggleGroup } from "./actions";
+import { clearAll, toggleDevice, toggleGroup, toggleProtocol } from "./actions";
 import createLogger from "redux-logger";
 
 import $ from "jquery";
@@ -79,7 +79,7 @@ const renderAccordionItems = (group) => {
     
     return `<div class="accordion-item" data-group-id="${group.id}">
                 <div class="accordion-item-header">
-                    <i class="triangle"></i>
+                    <i class="accordion-toggler triangle"></i>
                     <label class="label">
                         ${input}
                         ${group.name}
@@ -247,10 +247,8 @@ const renderAll = () => {
     renderSummaryBox();
 };
 
-const unsubscribe = store.subscribe(renderAll);
+store.subscribe(renderAll);
 renderAll();
-
-//unsubscribe();
 
 let form = $(".form");
 
@@ -276,4 +274,13 @@ form.on("change", ".group-input", e => {
     const parentGroupId = element.parents(".accordion-item").data("group-id").toString();
     const active = element.is(":checked") ? 1 : 0;
     store.dispatch(toggleGroup(parentGroupId, active))
+});
+
+form.on("change", ".protocols-box input", e => {
+    const protocolId = $(e.target).data("item-id");
+    store.dispatch(toggleProtocol(protocolId))
+});
+
+form.on("click", ".accordion-toggler", e => {
+    $(e.target).parents(".accordion-item").find(".accordion-item-content").slideToggle();
 });
