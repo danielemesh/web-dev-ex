@@ -1,7 +1,7 @@
 require("./assets/styles/style.scss");
 
 import { createStore, applyMiddleware } from "redux";
-import { clearAll, toggleDevice, toggleGroup, toggleProtocol } from "./actions";
+import { clearAll, selectTime, toggleDevice, toggleGroup, toggleProtocol } from "./actions";
 import createLogger from "redux-logger";
 
 import $ from "jquery";
@@ -46,10 +46,6 @@ const normalizeData = (data) => {
     });
     
     return { groups, protocols, times };
-};
-
-const normalizeGroups = (groups) => {
-
 };
 
 const initialState = normalizeData(DATA);
@@ -283,4 +279,9 @@ form.on("change", ".protocols-box input", e => {
 
 form.on("click", ".accordion-toggler", e => {
     $(e.target).parents(".accordion-item").find(".accordion-item-content").slideToggle();
+});
+
+form.on("change", ".times-box input", e => {
+    const id = $(e.target).data("item-id");
+    store.dispatch(selectTime(id))
 });
