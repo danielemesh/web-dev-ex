@@ -1,6 +1,7 @@
 export const TOGGLE_DEVICE   = "TOGGLE_DEVICE";
 export const TOGGLE_PROTOCOL = "TOGGLE_PROTOCOL";
 export const SELECT_TIME     = "SELECT_TIME";
+export const CLEAR_ALL       = "CLEAR_ALL";
 
 /* Actions Creators
  ============================= */
@@ -23,5 +24,11 @@ export const toggleProtocol = (id) => {
     return {
         type: TOGGLE_PROTOCOL,
         id
+    };
+};
+
+export const clearAll = () => {
+    return {
+        type: CLEAR_ALL
     };
 };

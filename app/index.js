@@ -1,6 +1,7 @@
 require("./assets/styles/style.scss");
 
 import { createStore, applyMiddleware } from "redux";
+import { clearAll, toggleDevice } from "./actions";
 import createLogger from "redux-logger";
 
 import $ from "jquery";
@@ -9,56 +10,48 @@ import { app } from "./reducers/root_reducer";
 import { DATA } from "./data/ex_data";
 
 const normalizeData = (data) => {
-    let normalizedData = {
-        groups   : data.device_groups,
-        protocols: data.protocols.map(protocol => assignActiveProp(protocol)),
-        times    : {
-            byId        : constructById(data.times, "id"),
-            selectedTime: 0
-        }
-    };
-    
-    return normalizedData;
-};
-
-const assignActiveProp = (obj) => {
-    return Object.assign({}, obj, {
-        active: 0
+    // Groups
+    let groups = data.device_groups;
+    groups.map(group => {
+        return group.devices.map(device => {
+            return Object.assign(device, {
+                inputType: "checkbox",
+                inputName: device.name.replace(" ", "_")
+            });
+        });
     });
-};
-
-const constructById = (dataArr, key) => {
-    return dataArr.reduce((result, next) => {
-        result[next[key]] = next;
-        return result;
-    }, {});
+    
+    // Protocols
+    let protocols = data.protocols.map(protocol => {
+        return Object.assign(protocol, {
+            active   : 0,
+            inputType: "checkbox",
+            inputName: protocol.name.replace(" ", "_")
+        });
+    });
+    
+    // Times
+    let times = data.times.map(time => {
+        return Object.assign(time, {
+            active   : 0,
+            inputType: "radio",
+            inputName: "time"
+        });
+    });
+    
+    return { groups, protocols, times };
 };
 
 const initialState = normalizeData(DATA);
-
-const logger = createLogger();
-const store  = createStore(app, initialState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(logger));
+const logger       = createLogger();
+const store        = createStore(app, initialState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(logger));
 
 
 /* UI Code
  ============================= */
-const form = $(".form");
-
-//const renderBoxStructure = (cssClass, step, title) => {
-//    return `<div class="box ${cssClass}">
-//            <h3 class="box-title">
-//                <span class="step">${step}</span>
-//                ${title}
-//            </h3>
-//
-//            <div class="box-content">
-//
-//            </div>
-//        </div>`
-//};
 
 const renderDevicesGroupsBox = () => {
-    const groups = store.getState().groups;
+    let groups = store.getState().groups;
     
     let box = $(".group-devices-box .box-content");
     
@@ -70,7 +63,7 @@ const renderDevicesGroupsBox = () => {
 };
 
 const renderAccordionItems = (group) => {
-    return `<div class="accordion-item">
+    return `<div class="accordion-item" data-group-id="${group.id}">
                 <div class="accordion-item-header">
                     <i class="triangle"></i>
                     <label class="label">
@@ -86,8 +79,7 @@ const renderAccordionItems = (group) => {
 
 const renderProtocolsBox = () => {
     const protocols = store.getState().protocols;
-    
-    let box = $(".protocols-box .box-content");
+    let box         = $(".protocols-box .box-content");
     
     const html = renderSelectorsList(protocols);
     
@@ -95,28 +87,10 @@ const renderProtocolsBox = () => {
 };
 
 const renderTimesBox = () => {
-    let box = $(".times-box .box-content");
+    const times = store.getState().times;
+    let box     = $(".times-box .box-content");
     
-    let html = `<ul class="selectors-list">
-                    <li class="selector-item">
-                        <label class="label">
-                            <input type="radio" name="time">
-                            device 11
-                        </label>
-                    </li>
-                    <li class="selector-item">
-                        <label class="label">
-                            <input type="radio" name="time">
-                            device 11
-                        </label>
-                    </li>
-                    <li class="selector-item">
-                        <label class="label">
-                            <input type="radio" name="time">
-                            device 11
-                        </label>
-                    </li>
-                </ul>`;
+    const html = renderSelectorsList(times);
     
     box.html(html);
 };
@@ -128,11 +102,9 @@ const renderSelectorsList = (items) => {
 };
 
 const renderSelectorsListItem = (item) => {
-    let input = `<input type="checkbox">`;
+    let input = `<input type="${item.inputType}" name="${item.inputName}" data-item-id="${item.id}"`;
     
-    if (item.active) {
-        input = `<input type="checkbox" checked>`;
-    }
+    input += item.active ? " checked>" : ">";
     
     return `<li class="selector-item">
                 <label class="label">
@@ -142,6 +114,141 @@ const renderSelectorsListItem = (item) => {
             </li>`;
 };
 
-renderDevicesGroupsBox();
-renderProtocolsBox();
-renderTimesBox();
+const renderSummaryBox = () => {
+    let box = $(".summary-box .box-content");
+    
+    const groupsSummary     = renderGroupsSummary();
+    const protocolsSummary  = renderProtocolsSummary();
+    const timesSummary      = renderTimesSummary();
+    const ctaButtonsSummary = renderCTAButtonsSummary();
+    
+    box.html(groupsSummary.concat(protocolsSummary).concat(timesSummary).concat(ctaButtonsSummary));
+};
+
+const renderGroupsSummary = () => {
+    let groups       = getActiveDevicesGroups(store.getState().groups);
+    const emptyClass = groups.length ? "" : "empty";
+    
+    return `<div class="summary-section ${emptyClass}">
+                    <h4 class="summary-section-header">
+                        <span class="step">1</span>
+                        <span class="placeholder">-Select Devices-</span>
+                    </h4>
+                    <div class="summary-section-content">
+                        ${renderGroupsSummaryLists(groups)}
+                    </div>
+                </div>`;
+};
+
+const getActiveDevicesGroups = (groups) => {
+    let activeDevicesGroups = [];
+    
+    groups.forEach((group) => {
+        let devices = group.devices.filter(d => d.active);
+        
+        if (devices.length) {
+            activeDevicesGroups.push(group);
+        }
+    });
+    
+    return activeDevicesGroups;
+};
+
+const renderGroupsSummaryLists = (groups) => {
+    let html = groups.map(group => {
+        let activeDevices = group.devices.filter(d => d.active);
+        
+        if (activeDevices.length) {
+            let listHtml = `<ul class="summary-list">`;
+            
+            const items = activeDevices.map((device) => {
+                return `<li class="summary-list-item">${device.name}</li>`;
+            });
+            
+            return listHtml.concat(items.join("")).concat("</ul>");
+        }
+    });
+    
+    return html.join("");
+};
+
+const renderProtocolsSummary = () => {
+    let protocols = store.getState().protocols;
+    protocols     = protocols.filter(p => p.active);
+    
+    const emptyClass = protocols.length ? "" : "empty";
+    
+    return `<div class="summary-section ${emptyClass}">
+                    <h4 class="summary-section-header">
+                        <span class="step">2</span>
+                        <span class="placeholder">-Select Protocols-</span>
+                    </h4>
+                    <div class="summary-section-content">
+                        ${renderProtocolsSummaryList(protocols)}
+                    </div>
+                </div>`
+};
+
+const renderProtocolsSummaryList = (protocols) => {
+    if (protocols.length) {
+        let listHtml = `<ul class="summary-list">`;
+        
+        const items = protocols.map(protocol => {
+            return `<li class="summary-list-item">${protocol.name}</li>`;
+        });
+        
+        return listHtml.concat(items.join("")).concat("</ul>");
+    }
+    return "";
+};
+
+const renderTimesSummary = () => {
+    const times        = store.getState().times;
+    const selectedTime = times.filter(t => t.active);
+    const emptyClass   = selectedTime.length ? "" : "empty";
+    
+    return `<div class="summary-section ${emptyClass}">
+                    <h4 class="summary-section-header">
+                        <span class="step">3</span>
+                        <span class="placeholder">-Select Time Period-</span>
+                        <span class="value">${ selectedTime.length ? selectedTime[0].name : ""}</span>
+                    </h4>
+                </div>`;
+};
+
+const renderCTAButtonsSummary = () => {
+    return `<div class="summary-section cta-buttons">
+                    <a href="#" class="btn btn-link cta-btn" id="clearBtn">Clear</a>
+                    <span class="btn btn-primary cta-btn">
+                        <i class="triangle triangle-right"></i>
+                        <input class="btn submit-btn" type="submit" id="submitBtn" value="Start Learning">
+                    </span>
+                </div>`;
+};
+
+const renderAll = () => {
+    renderDevicesGroupsBox();
+    renderProtocolsBox();
+    renderTimesBox();
+    renderSummaryBox();
+};
+
+const unsubscribe = store.subscribe(renderAll);
+renderAll();
+
+//unsubscribe();
+
+$(".form").on("click", "#clearBtn", event => {
+    event.preventDefault();
+    
+    store.dispatch(clearAll());
+});
+
+$(".form").on("change", ".accordion-item-content input", e => {
+    //e.preventDefault();
+    const element       = $(e.target);
+    const deviceId      = element.data("item-id");
+    const parentGroupId = element.parents(".accordion-item").data("group-id").toString();
+    
+    store.dispatch(toggleDevice(parentGroupId, deviceId));
+});

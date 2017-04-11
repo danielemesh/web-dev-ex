@@ -42,12 +42,12 @@
 			}
 			
 			.placeholder {
-				opacity: 1;
+				display: inline-block;
 			}
 		}
 		
 		.placeholder {
-			opacity: 0;
+			display: none;
 			padding-left: 10px;
 			color: $gray-light;
 		}
